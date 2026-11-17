@@ -1,0 +1,8 @@
+{
+  "name": "Anvisa - Agência Nacional de Vigilância Sanitária",
+  "description": "Portal independente para consulta e verificação de registros de produtos cosméticos no Brasil, com painel administrativo protegido e base de dados persistente.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

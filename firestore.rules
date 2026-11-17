@@ -1,0 +1,178 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net: deny everything by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global hardened helpers
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email == 'myy92115@gmail.com'
+      );
+    }
+
+    function isValidDateString(val) {
+      return val is string && val.size() == 10 && val.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+    }
+
+    function isValidCosmeticProduct(data) {
+      return data.keys().hasAll([
+        'productName',
+        'registrationNumber',
+        'snbNumber',
+        'processNumber',
+        'registrationDate',
+        'expirationDate',
+        'manufacturerName',
+        'originCountry',
+        'status',
+        'description',
+        'imageUrl',
+        'hasUploadedImage',
+        'verifiedByAdmin',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'productName',
+        'registrationNumber',
+        'snbNumber',
+        'processNumber',
+        'registrationDate',
+        'expirationDate',
+        'manufacturerName',
+        'originCountry',
+        'status',
+        'description',
+        'imageUrl',
+        'hasUploadedImage',
+        'verifiedByAdmin',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.productName is string && data.productName.size() >= 2 && data.productName.size() <= 200 &&
+      data.registrationNumber is string && data.registrationNumber.size() >= 3 && data.registrationNumber.size() <= 64 &&
+      data.snbNumber is string && data.snbNumber.size() >= 3 && data.snbNumber.size() <= 64 &&
+      data.processNumber is string && data.processNumber.size() >= 3 && data.processNumber.size() <= 64 &&
+      isValidDateString(data.registrationDate) &&
+      isValidDateString(data.expirationDate) &&
+      data.manufacturerName is string && data.manufacturerName.size() >= 2 && data.manufacturerName.size() <= 200 &&
+      data.originCountry is string && data.originCountry.size() >= 2 && data.originCountry.size() <= 100 &&
+      data.status is string && data.status in ['valid', 'expired', 'suspended'] &&
+      data.description is string && data.description.size() <= 2000 &&
+      data.imageUrl is string && data.imageUrl.size() <= 500 &&
+      data.hasUploadedImage is bool &&
+      data.verifiedByAdmin is bool && data.verifiedByAdmin == true &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    function isValidCosmeticImage(data) {
+      return data.keys().hasAll(['dataUrl', 'updatedAt']) &&
+        data.keys().hasOnly(['dataUrl', 'updatedAt']) &&
+        data.dataUrl is string && data.dataUrl.size() >= 10 && data.dataUrl.size() <= 250000 &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['email', 'role', 'createdAt']) &&
+        data.keys().hasOnly(['email', 'role', 'createdAt']) &&
+        data.email is string && data.email.size() >= 5 && data.email.size() <= 200 &&
+        data.role is string && data.role == 'admin' &&
+        data.createdAt is timestamp;
+    }
+
+    // Public verification registry of admin-verified cosmetics (zero PII)
+    match /cosmetics/{cosmeticId} {
+      allow get: if isValidId(cosmeticId) && (resource == null || existing().verifiedByAdmin == true);
+      allow list: if resource.data.verifiedByAdmin == true;
+
+      allow create: if isAdmin() &&
+        isValidId(cosmeticId) &&
+        isValidCosmeticProduct(incoming()) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isAdmin() &&
+        isValidId(cosmeticId) &&
+        isValidCosmeticProduct(incoming()) &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'productName',
+          'registrationNumber',
+          'snbNumber',
+          'processNumber',
+          'registrationDate',
+          'expirationDate',
+          'manufacturerName',
+          'originCountry',
+          'status',
+          'description',
+          'imageUrl',
+          'hasUploadedImage',
+          'verifiedByAdmin',
+          'updatedAt'
+        ]);
+
+      allow delete: if isAdmin() && isValidId(cosmeticId);
+    }
+
+    // Product image payloads (single-document get allowed publicly for display, no list)
+    match /cosmetic_images/{cosmeticId} {
+      allow get: if isValidId(cosmeticId);
+      allow list: if false;
+
+      allow create: if isAdmin() &&
+        isValidId(cosmeticId) &&
+        isValidCosmeticImage(incoming()) &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isAdmin() &&
+        isValidId(cosmeticId) &&
+        isValidCosmeticImage(incoming()) &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['dataUrl', 'updatedAt']);
+
+      allow delete: if isAdmin() && isValidId(cosmeticId);
+    }
+
+    // Admin access control registry (PII-isolated: email only visible to owner or admin)
+    match /admins/{adminId} {
+      allow get: if isVerifiedUser() && isValidId(adminId) && (request.auth.uid == adminId || isAdmin());
+      allow list: if false;
+
+      allow create: if isAdmin() &&
+        isValidId(adminId) &&
+        isValidAdminUser(incoming()) &&
+        incoming().createdAt == request.time;
+
+      allow update: if false;
+      allow delete: if isAdmin() && isValidId(adminId) && adminId != request.auth.uid;
+    }
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "entities": {
+    "CosmeticProduct": {
+      "title": "CosmeticProduct",
+      "description": "Verified cosmetic product registration entry managed by the portal administration.",
+      "type": "object",
+      "properties": {
+        "productName": {
+          "type": "string",
+          "description": "Official product name",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "registrationNumber": {
+          "type": "string",
+          "description": "Unique cosmetic registration number",
+          "minLength": 3,
+          "maxLength": 64
+        },
+        "snbNumber": {
+          "type": "string",
+          "description": "Company SNB / corporate registration identifier",
+          "minLength": 3,
+          "maxLength": 64
+        },
+        "processNumber": {
+          "type": "string",
+          "description": "Regulatory or administrative process number",
+          "minLength": 3,
+          "maxLength": 64
+        },
+        "registrationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Registration issue date in YYYY-MM-DD format",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "expirationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Registration expiration date in YYYY-MM-DD format",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "manufacturerName": {
+          "type": "string",
+          "description": "Manufacturer company legal name",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "originCountry": {
+          "type": "string",
+          "description": "Country of origin",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "status": {
+          "type": "string",
+          "description": "Current registration status",
+          "enum": ["valid", "expired", "suspended"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed product description",
+          "maxLength": 2000
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Optional external image URL",
+          "maxLength": 500
+        },
+        "hasUploadedImage": {
+          "type": "boolean",
+          "description": "Whether an uploaded image exists in cosmetic_images"
+        },
+        "verifiedByAdmin": {
+          "type": "boolean",
+          "description": "Confirms entry was verified and published by an authorized administrator"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server last update timestamp"
+        }
+      },
+      "required": [
+        "productName",
+        "registrationNumber",
+        "snbNumber",
+        "processNumber",
+        "registrationDate",
+        "expirationDate",
+        "manufacturerName",
+        "originCountry",
+        "status",
+        "description",
+        "imageUrl",
+        "hasUploadedImage",
+        "verifiedByAdmin",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "CosmeticImage": {
+      "title": "CosmeticImage",
+      "description": "Compressed product image payload stored separately to keep query documents lightweight.",
+      "type": "object",
+      "properties": {
+        "dataUrl": {
+          "type": "string",
+          "description": "Base64 compressed WebP/JPEG data URL",
+          "minLength": 10,
+          "maxLength": 250000
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server update timestamp"
+        }
+      },
+      "required": ["dataUrl", "updatedAt"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized administrator record.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Administrator email address",
+          "minLength": 5,
+          "maxLength": 200
+        },
+        "role": {
+          "type": "string",
+          "description": "Administrator role",
+          "enum": ["admin"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp"
+        }
+      },
+      "required": ["email", "role", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/cosmetics/{cosmeticId}": {
+      "schema": { "$ref": "#/entities/CosmeticProduct" },
+      "description": "Publicly searchable registry of admin-verified cosmetic products."
+    },
+    "/cosmetic_images/{cosmeticId}": {
+      "schema": { "$ref": "#/entities/CosmeticImage" },
+      "description": "Uploaded product images referenced by cosmetic product ID."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Authorized portal administrators."
+    }
+  }
+}

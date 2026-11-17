@@ -7,6 +7,7 @@ interface ProductThumbnailProps {
   imageUrl?: string;
   hasUploadedImage?: boolean;
   className?: string;
+  fit?: 'cover' | 'contain';
 }
 
 export const ProductThumbnail: React.FC<ProductThumbnailProps> = ({
@@ -15,6 +16,7 @@ export const ProductThumbnail: React.FC<ProductThumbnailProps> = ({
   imageUrl,
   hasUploadedImage,
   className = 'w-12 h-12',
+  fit = 'cover',
 }) => {
   const [resolvedSrc, setResolvedSrc] = useState<string | null>(
     imageUrl?.trim() ? imageUrl.trim() : null
@@ -80,7 +82,9 @@ export const ProductThumbnail: React.FC<ProductThumbnailProps> = ({
       alt={productName}
       referrerPolicy="no-referrer"
       onError={() => setErrored(true)}
-      className={`${className} rounded-[3px] border border-[#dce1e7] object-cover bg-white shrink-0`}
+      className={`${className} rounded-[3px] border border-[#dce1e7] ${
+        fit === 'contain' ? 'object-contain p-1' : 'object-cover'
+      } bg-white shrink-0`}
     />
   );
 };

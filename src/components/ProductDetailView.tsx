@@ -3,7 +3,6 @@ import { ArrowLeft, Printer, ShieldCheck, AlertCircle } from 'lucide-react';
 import { fetchCosmeticById } from '../services/cosmeticsService';
 import { formatDateBR, type CosmeticProduct } from '../types/cosmetic';
 import { StatusIndicator } from './StatusIndicator';
-import { ProductThumbnail } from './ProductThumbnail';
 
 interface ProductDetailViewProps {
   productId: string;
@@ -114,110 +113,94 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           {/* Status Verification Banner */}
           <StatusIndicator status={product.status} size="lg" />
 
-          <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-6 items-start">
-            {/* Left Column: Product Image */}
-            <div className="space-y-2.5">
-              <ProductThumbnail
-                productId={product.id}
-                productName={product.productName}
-                imageUrl={product.imageUrl}
-                hasUploadedImage={product.hasUploadedImage}
-                className="w-full h-[240px]"
-              />
-              <p className="text-[11px] text-[#666666] text-center">
-                Imagem cadastrada para identificação do produto
-              </p>
-            </div>
-
-            {/* Right Column: Official-style Specification Table */}
-            <div className="border border-[#dee2e6] rounded-[3px] overflow-hidden">
-              <table className="w-full text-[13px] border-collapse">
-                <tbody className="divide-y divide-[#e9ecef]">
-                  <tr>
-                    <th className="w-[38%] py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Nome do Produto
-                    </th>
-                    <td className="py-2.5 px-3.5 font-semibold text-[#111111]">
-                      {product.productName}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Número do Registro
-                    </th>
-                    <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
-                      {product.registrationNumber}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Número SNB da Empresa
-                    </th>
-                    <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
-                      {product.snbNumber}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Número do Processo
-                    </th>
-                    <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
-                      {product.processNumber}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Empresa Fabricante
-                    </th>
-                    <td className="py-2.5 px-3.5 text-[#222222]">
-                      {product.manufacturerName}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      País de Origem
-                    </th>
-                    <td className="py-2.5 px-3.5 text-[#222222]">
-                      {product.originCountry}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Data do Registro
-                    </th>
-                    <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
-                      {formatDateBR(product.registrationDate)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Vencimento do Registro
-                    </th>
-                    <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
-                      {formatDateBR(product.expirationDate)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Situação Atual do Registro
-                    </th>
-                    <td className="py-2.5 px-3.5">
-                      <StatusIndicator status={product.status} size="sm" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                      Descrição do Produto
-                    </th>
-                    <td className="py-2.5 px-3.5 text-[#333333] whitespace-pre-line leading-relaxed">
-                      {product.description?.trim()
-                        ? product.description
-                        : 'Nenhuma descrição adicional informada.'}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          {/* Official-style Specification Table */}
+          <div className="border border-[#dee2e6] rounded-[3px] overflow-hidden">
+            <table className="w-full text-[13px] border-collapse">
+              <tbody className="divide-y divide-[#e9ecef]">
+                <tr>
+                  <th className="w-[38%] py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Nome do Produto
+                  </th>
+                  <td className="py-2.5 px-3.5 font-semibold text-[#111111]">
+                    {product.productName}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Número do Registro
+                  </th>
+                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
+                    {product.registrationNumber}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Número SNB da Empresa
+                  </th>
+                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
+                    {product.snbNumber}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Número do Processo
+                  </th>
+                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
+                    {product.processNumber}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Empresa Fabricante
+                  </th>
+                  <td className="py-2.5 px-3.5 text-[#222222]">
+                    {product.manufacturerName}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    País de Origem
+                  </th>
+                  <td className="py-2.5 px-3.5 text-[#222222]">
+                    {product.originCountry}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Data do Registro
+                  </th>
+                  <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
+                    {formatDateBR(product.registrationDate)}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Vencimento do Registro
+                  </th>
+                  <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
+                    {formatDateBR(product.expirationDate)}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Situação Atual do Registro
+                  </th>
+                  <td className="py-2.5 px-3.5">
+                    <StatusIndicator status={product.status} size="sm" />
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Descrição do Produto
+                  </th>
+                  <td className="py-2.5 px-3.5 text-[#333333] whitespace-pre-line leading-relaxed">
+                    {product.description?.trim()
+                      ? product.description
+                      : 'Nenhuma descrição adicional informada.'}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <div className="pt-3 border-t border-[#e9ecef] text-[12px] text-[#555555]">

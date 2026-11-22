@@ -191,6 +191,30 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 </tr>
                 <tr>
                   <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Número do Registro
+                  </th>
+                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
+                    {product.registrationNumber}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Número SNB da Empresa
+                  </th>
+                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
+                    {product.snbNumber}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Número do Processo
+                  </th>
+                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
+                    {product.processNumber}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
                     Situação Atual do Registro
                   </th>
                   <td className="py-2.5 px-3.5">
@@ -215,14 +239,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 </tr>
                 <tr>
                   <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Vencimento do Registro
-                  </th>
-                  <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
-                    {formatDateBR(product.expirationDate)}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
                     País de Origem
                   </th>
                   <td className="py-2.5 px-3.5 text-[#222222]">
@@ -235,30 +251,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                   </th>
                   <td className="py-2.5 px-3.5 text-[#333333] whitespace-pre-line leading-relaxed">
                     {localizeDescriptionPTBR(product.description)}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Número do Registro
-                  </th>
-                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
-                    {product.registrationNumber}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Número SNB da Empresa
-                  </th>
-                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
-                    {product.snbNumber}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Número do Processo
-                  </th>
-                  <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
-                    {product.processNumber}
                   </td>
                 </tr>
               </tbody>

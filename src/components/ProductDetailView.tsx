@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Printer, ShieldCheck, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Printer, AlertCircle } from 'lucide-react';
 import { fetchCosmeticById } from '../services/cosmeticsService';
 import { formatErrorPT } from '../lib/firebase';
 import { formatDateBR, type CosmeticProduct } from '../types/cosmetic';
@@ -170,10 +170,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           <h2 className="text-[15px] font-bold text-[#333333]">
             Detalhes do Registro de Cosmético
           </h2>
-          <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#1351b4]">
-            <ShieldCheck className="w-4 h-4" aria-hidden="true" />
-            <span>Verificado pela Administração</span>
-          </span>
         </div>
 
         <div className="p-5 space-y-5">

@@ -10,6 +10,67 @@ interface ProductDetailViewProps {
   onBack: () => void;
 }
 
+const COUNTRY_PT_BR: Record<string, string> = {
+  brazil: 'Brasil',
+  brasil: 'Brasil',
+  'united states': 'Estados Unidos',
+  usa: 'Estados Unidos',
+  us: 'Estados Unidos',
+  france: 'França',
+  italy: 'Itália',
+  germany: 'Alemanha',
+  spain: 'Espanha',
+  'united kingdom': 'Reino Unido',
+  uk: 'Reino Unido',
+  egypt: 'Egito',
+  japan: 'Japão',
+  'south korea': 'Coreia do Sul',
+  morocco: 'Marrocos',
+  switzerland: 'Suíça',
+};
+
+function localizeCountryPTBR(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return 'Brasil';
+  return COUNTRY_PT_BR[trimmed.toLowerCase()] ?? trimmed;
+}
+
+function localizeManufacturerPTBR(raw: string): string {
+  return raw.replace(/\s+and\s+/gi, ' e ');
+}
+
+function localizeDescriptionPTBR(raw?: string): string {
+  const trimmed = raw?.trim() ?? '';
+  if (!trimmed) return 'Nenhuma descrição adicional informada.';
+
+  const normalized = trimmed.replace(/[—–-]/g, '-').replace(/\s+/g, ' ').toLowerCase();
+  if (
+    normalized === 'treatment - professional hair care product.' ||
+    normalized === 'treatment - professional hair care product'
+  ) {
+    return 'Tratamento – Produto Profissional para Cuidados Capilares.';
+  }
+
+  const replacements: [RegExp, string][] = [
+    [/\bProfessional Hair Care Product\b/gi, 'Produto Profissional para Cuidados Capilares'],
+    [/\bHair Care Product\b/gi, 'Produto para Cuidados Capilares'],
+    [/\bCosmetic Product\b/gi, 'Produto Cosmético'],
+    [/\bHair Treatment\b/gi, 'Tratamento Capilar'],
+    [/\bHair Mask\b/gi, 'Máscara Capilar'],
+    [/\bProfessional Use\b/gi, 'Uso Profissional'],
+    [/\bMade in Brazil\b/gi, 'Fabricado no Brasil'],
+    [/\bTreatment\b/gi, 'Tratamento'],
+    [/\bConditioner\b/gi, 'Condicionador'],
+    [/\bMoisturizing\b/gi, 'Hidratante'],
+    [/\bNourishing\b/gi, 'Nutritivo'],
+    [/\bSmoothing\b/gi, 'Alisamento'],
+    [/\bKeratin\b/gi, 'Queratina'],
+    [/\bOrganic\b/gi, 'Orgânico'],
+  ];
+
+  return replacements.reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), trimmed);
+}
+
 export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   productId,
   onBack,
@@ -141,7 +202,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     Empresa Fabricante
                   </th>
                   <td className="py-2.5 px-3.5 text-[#222222]">
-                    {product.manufacturerName}
+                    {localizeManufacturerPTBR(product.manufacturerName)}
                   </td>
                 </tr>
                 <tr>
@@ -165,7 +226,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     País de Origem
                   </th>
                   <td className="py-2.5 px-3.5 text-[#222222]">
-                    {product.originCountry}
+                    {localizeCountryPTBR(product.originCountry)}
                   </td>
                 </tr>
                 <tr>
@@ -173,9 +234,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     Descrição do Produto
                   </th>
                   <td className="py-2.5 px-3.5 text-[#333333] whitespace-pre-line leading-relaxed">
-                    {product.description?.trim()
-                      ? product.description
-                      : 'Nenhuma descrição adicional informada.'}
+                    {localizeDescriptionPTBR(product.description)}
                   </td>
                 </tr>
                 <tr>

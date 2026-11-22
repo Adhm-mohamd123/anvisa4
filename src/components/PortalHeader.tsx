@@ -82,7 +82,7 @@ export const PortalHeader: React.FC<PortalHeaderProps> = ({
                 }`}
               >
                 <Lock className="w-3 h-3" aria-hidden="true" />
-                <span>{isAdminUser ? 'Painel Admin' : 'Administração'}</span>
+                <span>{isAdminUser ? 'Painel Administrativo' : 'Administração'}</span>
               </button>
             </nav>
 
@@ -158,7 +158,7 @@ export const PortalHeader: React.FC<PortalHeaderProps> = ({
               className="text-left py-1 text-[#333333] hover:text-[#1b4e9b] inline-flex items-center gap-1.5 cursor-pointer"
             >
               <Lock className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>{isAdminUser ? 'Painel Admin' : 'Administração'}</span>
+              <span>{isAdminUser ? 'Painel Administrativo' : 'Administração'}</span>
             </button>
           </nav>
         )}

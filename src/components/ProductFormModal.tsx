@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X, Upload, Trash2 } from 'lucide-react';
+import { formatErrorPT } from '../lib/firebase';
 import {
   compressImageFile,
   createCosmeticProduct,
@@ -138,9 +139,7 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
       onClose();
     } catch (err) {
       setSubmitError(
-        err instanceof Error
-          ? err.message
-          : 'Erro ao salvar produto na base de dados.'
+        formatErrorPT(err, 'Erro ao salvar produto na base de dados.')
       );
     } finally {
       setSaving(false);

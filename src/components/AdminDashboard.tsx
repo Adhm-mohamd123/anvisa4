@@ -13,7 +13,7 @@ import {
   AlertTriangle,
   ShieldAlert,
 } from 'lucide-react';
-import { auth, googleProvider } from '../lib/firebase';
+import { auth, formatErrorPT, googleProvider } from '../lib/firebase';
 import {
   deleteCosmeticProduct,
   quickUpdateCosmeticStatus,
@@ -73,9 +73,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       await signInWithPopup(auth, googleProvider);
     } catch (err) {
       setAuthError(
-        err instanceof Error
-          ? err.message
-          : 'Não foi possível concluir o login.'
+        formatErrorPT(err, 'Não foi possível concluir o acesso administrativo.')
       );
     } finally {
       setSigningIn(false);
@@ -208,9 +206,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       setDeleteTarget(null);
       onRefresh();
     } catch (err) {
-      setActionFeedback(
-        err instanceof Error ? err.message : 'Erro ao excluir o produto.'
-      );
+      setActionFeedback(formatErrorPT(err, 'Erro ao excluir o produto.'));
     } finally {
       setDeleting(false);
     }
@@ -227,9 +223,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       );
       onRefresh();
     } catch (err) {
-      setActionFeedback(
-        err instanceof Error ? err.message : 'Erro ao atualizar situação.'
-      );
+      setActionFeedback(formatErrorPT(err, 'Erro ao atualizar situação.'));
     }
   };
 
@@ -254,7 +248,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <Lock className="w-6 h-6" aria-hidden="true" />
           </div>
           <p className="text-[13px] text-[#444444] leading-relaxed">
-            Faça login com a conta de administrador autorizada para cadastrar, editar,
+            Entre com a conta de administrador autorizada para cadastrar, editar,
             monitorar vencimentos e importar/exportar registros de cosméticos.
           </p>
           {authError && (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Upload, Download, CheckCircle2, AlertCircle } from 'lucide-react';
+import { formatErrorPT } from '../lib/firebase';
 import { createCosmeticProduct } from '../services/cosmeticsService';
 import {
   normalizeDateInput,
@@ -82,7 +83,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       '"2031-01-15"',
       '"Laboratório Cosmético Exemplo Ltda"',
       '"Brasil"',
-      '"valid"',
+      '"válido"',
       '"Descrição técnica do produto cosmético."',
       '""',
     ].join(',');
@@ -212,10 +213,9 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       setParsedItems([]);
       onImported();
     } catch (err) {
+      const detail = formatErrorPT(err, 'Erro durante a importação em lote.');
       setParseError(
-        err instanceof Error
-          ? `Importação interrompida após ${successCount} registro(s): ${err.message}`
-          : 'Erro durante a importação em lote.'
+        `Importação interrompida após ${successCount} registro(s): ${detail}`
       );
     } finally {
       setImporting(false);

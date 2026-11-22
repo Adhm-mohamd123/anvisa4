@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Printer, ShieldCheck, AlertCircle } from 'lucide-react';
 import { fetchCosmeticById } from '../services/cosmeticsService';
+import { formatErrorPT } from '../lib/firebase';
 import { formatDateBR, type CosmeticProduct } from '../types/cosmetic';
 import { StatusIndicator } from './StatusIndicator';
 
@@ -31,7 +32,12 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       })
       .catch((err) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Erro ao carregar registro.');
+          setError(
+            formatErrorPT(
+              err,
+              'Não foi possível recuperar os detalhes deste registro.'
+            )
+          );
           setLoading(false);
         }
       });
@@ -59,7 +65,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         </h2>
         <p className="text-[13px] text-[#555555] max-w-lg mx-auto mt-1.5">
           {error
-            ? 'Não foi possível recuperar os detalhes deste registro.'
+            ? error
             : 'O produto solicitado não foi localizado ou não possui validação administrativa nesta base independente.'}
         </p>
         <button

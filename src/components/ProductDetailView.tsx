@@ -259,12 +259,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
 
           {/* Status Verification Banner */}
           <StatusIndicator status={product.status} size="lg" />
-
-          <div className="pt-3 border-t border-[#e9ecef] text-[12px] text-[#555555]">
-            <strong>Nota de Verificação:</strong> Os dados acima constam na base independente de
-            verificação da BRCosméticos após inserção e conferência administrativa. Este
-            comprovante não substitui documentos emitidos por órgãos governamentais oficiais.
-          </div>
         </div>
       </section>
     </div>

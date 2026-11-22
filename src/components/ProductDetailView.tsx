@@ -110,9 +110,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         </div>
 
         <div className="p-5 space-y-5">
-          {/* Status Verification Banner */}
-          <StatusIndicator status={product.status} size="lg" />
-
           {/* Official-style Specification Table */}
           <div className="border border-[#dee2e6] rounded-[3px] overflow-hidden">
             <table className="w-full text-[13px] border-collapse">
@@ -123,6 +120,56 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                   </th>
                   <td className="py-2.5 px-3.5 font-semibold text-[#111111]">
                     {product.productName}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Situação Atual do Registro
+                  </th>
+                  <td className="py-2.5 px-3.5">
+                    <StatusIndicator status={product.status} size="sm" />
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Empresa Fabricante
+                  </th>
+                  <td className="py-2.5 px-3.5 text-[#222222]">
+                    {product.manufacturerName}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Data do Registro
+                  </th>
+                  <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
+                    {formatDateBR(product.registrationDate)}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Vencimento do Registro
+                  </th>
+                  <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
+                    {formatDateBR(product.expirationDate)}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    País de Origem
+                  </th>
+                  <td className="py-2.5 px-3.5 text-[#222222]">
+                    {product.originCountry}
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
+                    Descrição do Produto
+                  </th>
+                  <td className="py-2.5 px-3.5 text-[#333333] whitespace-pre-line leading-relaxed">
+                    {product.description?.trim()
+                      ? product.description
+                      : 'Nenhuma descrição adicional informada.'}
                   </td>
                 </tr>
                 <tr>
@@ -149,59 +196,12 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     {product.processNumber}
                   </td>
                 </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Empresa Fabricante
-                  </th>
-                  <td className="py-2.5 px-3.5 text-[#222222]">
-                    {product.manufacturerName}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    País de Origem
-                  </th>
-                  <td className="py-2.5 px-3.5 text-[#222222]">
-                    {product.originCountry}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Data do Registro
-                  </th>
-                  <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
-                    {formatDateBR(product.registrationDate)}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Vencimento do Registro
-                  </th>
-                  <td className="py-2.5 px-3.5 tabular-nums text-[#222222]">
-                    {formatDateBR(product.expirationDate)}
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Situação Atual do Registro
-                  </th>
-                  <td className="py-2.5 px-3.5">
-                    <StatusIndicator status={product.status} size="sm" />
-                  </td>
-                </tr>
-                <tr>
-                  <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Descrição do Produto
-                  </th>
-                  <td className="py-2.5 px-3.5 text-[#333333] whitespace-pre-line leading-relaxed">
-                    {product.description?.trim()
-                      ? product.description
-                      : 'Nenhuma descrição adicional informada.'}
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
+
+          {/* Status Verification Banner */}
+          <StatusIndicator status={product.status} size="lg" />
 
           <div className="pt-3 border-t border-[#e9ecef] text-[12px] text-[#555555]">
             <strong>Nota de Verificação:</strong> Os dados acima constam na base independente de

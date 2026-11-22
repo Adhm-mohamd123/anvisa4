@@ -199,7 +199,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 </tr>
                 <tr>
                   <th className="py-2.5 px-3.5 bg-[#f8f9fa] text-left font-semibold text-[#333333] align-top">
-                    Número SNB da Empresa
+                    Número CNPJ da Empresa
                   </th>
                   <td className="py-2.5 px-3.5 font-mono tabular-nums text-[#111111]">
                     {product.snbNumber}

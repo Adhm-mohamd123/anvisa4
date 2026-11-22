@@ -19,7 +19,6 @@ import {
   normalizeDateInput,
   normalizeTextForSearch,
   validateCosmeticInput,
-  validateStrictSearchCriteria,
   type CosmeticProduct,
   type CosmeticProductInput,
   type RegistrationStatus,
@@ -294,37 +293,69 @@ export function filterCosmetics(
   products: CosmeticProduct[],
   criteria: SearchCriteria
 ): CosmeticProduct[] {
-  const validation = validateStrictSearchCriteria(criteria);
-  if (!validation.isValid) {
-    return [];
-  }
-
   const pName = normalizeTextForSearch(criteria.productName);
+  const pNameTokens = pName ? pName.split(' ').filter(Boolean) : [];
+  const pNameCode = normalizeCodeForSearch(criteria.productName);
+  const regRaw = criteria.registrationNumber.trim().toLowerCase();
   const regNorm = normalizeCodeForSearch(criteria.registrationNumber);
+  const snbRaw = criteria.snbNumber.trim().toLowerCase();
   const snbNorm = normalizeCodeForSearch(criteria.snbNumber);
   const mfg = normalizeTextForSearch(criteria.manufacturerName);
+  const mfgTokens = mfg ? mfg.split(' ').filter(Boolean) : [];
+  const procRaw = criteria.processNumber.trim().toLowerCase();
   const procNorm = normalizeCodeForSearch(criteria.processNumber);
   const expFrom = normalizeDateInput(criteria.expirationFrom);
   const expTo = normalizeDateInput(criteria.expirationTo);
 
-  return products.filter((item) => {
+  const filtered = products.filter((item) => {
     if (!item.verifiedByAdmin) return false;
 
-    if (normalizeTextForSearch(item.productName) !== pName) return false;
+    if (pName) {
+      const itemNameNorm = normalizeTextForSearch(item.productName);
+      const matchesAllTokens = pNameTokens.every((token) =>
+        itemNameNorm.includes(token)
+      );
+      const matchesCodeFallback =
+        Boolean(pNameCode) &&
+        (normalizeCodeForSearch(item.registrationNumber).includes(pNameCode) ||
+          normalizeCodeForSearch(item.snbNumber).includes(pNameCode) ||
+          normalizeCodeForSearch(item.processNumber).includes(pNameCode));
 
-    const itemRegNorm = normalizeCodeForSearch(item.registrationNumber);
-    if (!itemRegNorm || itemRegNorm !== regNorm) return false;
+      if (!matchesAllTokens && !matchesCodeFallback) return false;
+    }
 
-    const itemSnbNorm = normalizeCodeForSearch(item.snbNumber);
-    if (!itemSnbNorm || itemSnbNorm !== snbNorm) return false;
+    if (regRaw) {
+      const itemRegRaw = item.registrationNumber.toLowerCase();
+      const itemRegNorm = normalizeCodeForSearch(item.registrationNumber);
+      if (!itemRegRaw.includes(regRaw) && (!regNorm || !itemRegNorm.includes(regNorm))) {
+        return false;
+      }
+    }
 
-    if (normalizeTextForSearch(item.manufacturerName) !== mfg) return false;
+    if (snbRaw) {
+      const itemSnbRaw = item.snbNumber.toLowerCase();
+      const itemSnbNorm = normalizeCodeForSearch(item.snbNumber);
+      if (!itemSnbRaw.includes(snbRaw) && (!snbNorm || !itemSnbNorm.includes(snbNorm))) {
+        return false;
+      }
+    }
 
-    const itemProcNorm = normalizeCodeForSearch(item.processNumber);
-    if (!itemProcNorm || itemProcNorm !== procNorm) return false;
+    if (mfg) {
+      const itemMfgNorm = normalizeTextForSearch(item.manufacturerName);
+      if (!mfgTokens.every((token) => itemMfgNorm.includes(token))) return false;
+    }
+
+    if (procRaw) {
+      const itemProcRaw = item.processNumber.toLowerCase();
+      const itemProcNorm = normalizeCodeForSearch(item.processNumber);
+      if (!itemProcRaw.includes(procRaw) && (!procNorm || !itemProcNorm.includes(procNorm))) {
+        return false;
+      }
+    }
 
     const itemExpDate = normalizeDateInput(item.expirationDate);
-    if (!itemExpDate || itemExpDate < expFrom || itemExpDate > expTo) return false;
+    if (expFrom && itemExpDate && itemExpDate < expFrom) return false;
+    if (expTo && itemExpDate && itemExpDate > expTo) return false;
 
     if (criteria.statusFilter === 'expiring_soon') {
       if (item.status !== 'valid') return false;
@@ -338,6 +369,16 @@ export function filterCosmetics(
     }
 
     return true;
+  });
+
+  if (!pName) return filtered;
+
+  return filtered.sort((a, b) => {
+    const aName = normalizeTextForSearch(a.productName);
+    const bName = normalizeTextForSearch(b.productName);
+    const aScore = aName === pName ? 0 : aName.startsWith(pName) ? 1 : 2;
+    const bScore = bName === pName ? 0 : bName.startsWith(pName) ? 1 : 2;
+    return aScore - bScore;
   });
 }
 

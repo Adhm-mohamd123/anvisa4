@@ -33,7 +33,7 @@ export const PortalHeader: React.FC<PortalHeaderProps> = ({
   return (
     <header className="w-full no-print">
       {/* Slim top Brasil utility bar matching reference screenshot */}
-      <div className="bg-[#f1f1f1] border-b border-[#dcdcdc] hc-surface">
+      <div className="bg-[#f1f1f1] border-b border-[#dcdcdc] pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] hc-surface">
         <div className="max-w-[1140px] mx-auto px-4 h-[34px] flex items-center justify-between gap-4 text-[11px] text-[#4a4a4a]">
           <div className="flex items-center gap-2 whitespace-nowrap shrink-0">
             <svg
@@ -165,7 +165,7 @@ export const PortalHeader: React.FC<PortalHeaderProps> = ({
       </div>
 
       {/* Main light cool-gray banner matching reference screenshot */}
-      <div className="bg-[#eff1f4] border-b border-[#dde1e6] hc-banner">
+      <div className="bg-[#eff1f4] border-b border-[#dde1e6] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] hc-banner">
         <div className="max-w-[1140px] mx-auto px-4 pt-2 pb-4">
           {/* Secondary utility row on right: ACESSIBILIDADE | ALTO CONTRASTE with dotted underline */}
           <div className="flex items-center justify-end gap-4 text-[10px] tracking-wide text-[#1b4e9b] uppercase mb-1">

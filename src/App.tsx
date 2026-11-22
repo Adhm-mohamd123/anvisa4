@@ -130,6 +130,18 @@ export default function App() {
 
   const handleSubmitSearch = (override?: SearchCriteria) => {
     const active = override ?? draftCriteria;
+    const hasFilter = Boolean(
+      active.productName.trim() ||
+        active.registrationNumber.trim() ||
+        active.snbNumber.trim() ||
+        active.manufacturerName.trim() ||
+        active.processNumber.trim() ||
+        active.expirationFrom.trim() ||
+        active.expirationTo.trim() ||
+        active.statusFilter !== 'all'
+    );
+    if (!hasFilter) return;
+
     const matches = filterCosmetics(products, active);
     if (matches.length > 0) {
       setSearchNotFound(false);
@@ -166,7 +178,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#333333]">
+    <div className="min-h-[100dvh] flex flex-col bg-white text-[#333333]">
       <PortalHeader
         route={route}
         onNavigate={navigate}
@@ -175,7 +187,7 @@ export default function App() {
         isAdminUser={isAdminUser}
       />
 
-      <main className="flex-1 w-full max-w-[1140px] mx-auto px-4 py-4">
+      <main className="flex-1 w-full max-w-[1140px] mx-auto py-4 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]">
         {/* Breadcrumb bar matching reference screenshot */}
         <nav
           aria-label="Navegação estrutural"
@@ -269,7 +281,9 @@ export default function App() {
               }}
               onSubmitSearch={handleSubmitSearch}
               onResetSearch={handleResetSearch}
-              onClearResults={() => setSearchNotFound(false)}
+              onSelectProduct={(id) =>
+                navigate(`#/cosmeticos/detalhes/${encodeURIComponent(id)}`)
+              }
               searchNotFound={searchNotFound}
               loadingProducts={loadingProducts}
               allProducts={products}

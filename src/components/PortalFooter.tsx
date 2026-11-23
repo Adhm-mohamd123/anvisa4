@@ -23,13 +23,13 @@ export const PortalFooter: React.FC<PortalFooterProps> = ({ onNavigate }) => {
             .
           </li>
           <li>
-            Para cadastrar novos produtos, atualizar situações ou importar/exportar registros,{' '}
+            ,{' '}
             <button
               type="button"
               onClick={() => onNavigate('#/admin')}
               className="text-[#1351b4] hover:underline font-medium cursor-pointer"
             >
-              acesse o Painel Administrativo protegido
+              
             </button>
             .
           </li>

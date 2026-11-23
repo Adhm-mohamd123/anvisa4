@@ -11,8 +11,8 @@ export const PortalFooter: React.FC<PortalFooterProps> = ({ onNavigate }) => {
       <div className="max-w-[1140px] mx-auto pb-6 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]">
         <ul className="space-y-1.5 text-[13px] text-[#495057] list-disc pl-5">
           <li>
-            Base de dados independente para verificação de registros de cosméticos inseridos e
-            validados pela administração.{' '}
+            
+            .{' '}
             <button
               type="button"
               onClick={() => onNavigate('#/sobre')}

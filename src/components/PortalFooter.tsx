@@ -12,15 +12,15 @@ export const PortalFooter: React.FC<PortalFooterProps> = ({ onNavigate }) => {
         <ul className="space-y-1.5 text-[13px] text-[#495057] list-disc pl-5">
           <li>
             
-            .{' '}
+            {' '}
             <button
               type="button"
               onClick={() => onNavigate('#/sobre')}
               className="text-[#1351b4] hover:underline font-medium cursor-pointer"
             >
-              Saiba mais sobre os critérios de verificação
+             
             </button>
-            .
+            
           </li>
           <li>
             ,{' '}
@@ -31,7 +31,7 @@ export const PortalFooter: React.FC<PortalFooterProps> = ({ onNavigate }) => {
             >
               
             </button>
-            .
+            
           </li>
         </ul>
       </div>
